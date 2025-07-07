@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>IntelliFlight Delay Predictor</title>
+  <style>
+    body { font-family: Arial; padding: 2rem; max-width: 600px; margin: auto; }
+    label, input, select { display: block; margin: 0.5rem 0; width: 100%; }
+    button { padding: 0.5rem 1rem; margin-top: 1rem; background: #2563eb; color: white; border: none; border-radius: 4px; }
+    #result { margin-top: 2rem; padding: 1rem; border-radius: 4px; }
+    .success { background: #dcfce7; color: #166534; }
+    .error { background: #fee2e2; color: #991b1b; }
+    .loading { color: #4b5563; }
+  </style>
+</head>
+<body>
+  <h2>✈️ IntelliFlight Delay Prediction</h2>
+
+  <form id="predictionForm">
+    <label>Airline ID (int):</label>
+    <input type="number" id="airline" value="0" required>
+
+    <label>Origin Airport ID (int):</label>
+    <input type="number" id="origin" value="12" required>
+
+    <label>Destination Airport ID (int):</label>
+    <input type="number" id="destination" value="34" required>
+
+    <label>Distance (miles):</label>
+    <input type="number" id="distance" value="450" required>
+
+    <label>Scheduled Departure (hhmm):</label>
+    <input type="number" id="departure" value="1530" required>
+
+    <button type="submit">Predict Delay</button>
+  </form>
+
+  <div id="result"></div>
+
+  <script>
+    const form = document.getElementById('predictionForm');
+    const resultDiv = document.getElementById('result');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      // Show loading state
+      resultDiv.className = 'loading';
+      resultDiv.textContent = 'Processing prediction...';
+
+      const payload = {
+        AIRLINE: parseInt(document.getElementById('airline').value),
+        ORIGIN_AIRPORT: parseInt(document.getElementById('origin').value),
+        DESTINATION_AIRPORT: parseInt(document.getElementById('destination').value),
+        DISTANCE: parseFloat(document.getElementById('distance').value),
+        SCHEDULED_DEPARTURE: parseInt(document.getElementById('departure').value)
+      };
+
+      try {
+        const response = await fetch('https://greed-production.up.railway.app/predict', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(payload)
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.message || 'Prediction failed');
+        }
+
+        const data = await response.json();
+        resultDiv.className = 'success';
+        resultDiv.innerHTML = `
+          <strong>Prediction Result:</strong><br>
+          🚦 Delay: ${data.delayed ? 'Yes' : 'No'}<br>
+          📊 Confidence: ${(data.confidence * 100).toFixed(2)}%
+        `;
+      } catch (error) {
+        console.error('Prediction error:', error);
+        resultDiv.className = 'error';
+        resultDiv.textContent = `❌ Error: ${error.message || 'Failed to fetch prediction'}`;
+      }
+    });
+  </script>
+</body>
+</html>
