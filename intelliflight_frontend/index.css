@@ -1,0 +1,31 @@
+body { font-family: 'Patrick Hand', cursive; padding: 2rem; max-width: 600px; margin: auto; background-color:#dedede; }
+label, input, select { display: block; margin:auto; margin-bottom: 5px; width: 300px; }
+button { padding: 0.5rem 1rem; margin-top: 1rem; border: none; border-radius: 4px; }
+#result { margin-top: 2rem; padding: 1rem; border-radius: 20px;  }
+.success { background: #afeac4; color: #0d5d2c; border:1px solid black ; box-shadow: 2px 2px 0 black;}
+.error { background: #fee2e2; color: #991b1b; }
+.loading { color: #4b5563; }
+.container1{
+    margin: auto;
+    border:1px solid black;
+    height:410px; width: 410px;
+    border-radius: 10%;
+    padding: 20px;
+    background-color:#bbbdbc;
+    box-shadow: 2px 2px 0px black;
+    font-family: 'Patrick Hand', cursive;
+}
+input{
+    border: 1px solid black;
+    box-shadow: 1px 1px 0px black;
+    border-radius: 10px;
+    background-color: #dedede;
+}
+button{
+    background-color: #262f2e;
+    border: 1px solid black;
+    border-radius: 13px;
+    box-shadow: 2px 2px 0px black;
+    color: #dddddd;
+    font-family: 'Patrick Hand', cursive;
+}
